@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from app.core.application import Application
 
-app = FastAPI()
+app = Application()
+app.setup()
 
-@app.get('/health')
-async def health():
-    return { "status": "ok" }
+if __name__ == "__main__":
+    app.start()

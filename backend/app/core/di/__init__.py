@@ -1,0 +1,1 @@
+# Кароче предполагаю что можно использовать Dependency Injector (ets-labs)
