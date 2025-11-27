@@ -1,6 +1,6 @@
-from app.core.application import Application
+from backend.app.core.app import App
 
-app = Application()
+app = App()
 app.setup()
 
 if __name__ == "__main__":

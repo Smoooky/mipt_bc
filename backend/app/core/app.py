@@ -3,7 +3,7 @@ from app.modules import register_modules
 from app.core.middlewares import register_middlewares
 from app.core.config import settings
 
-class Application: 
+class App: 
     def __init__(self):
         self.fastapi_app = FastAPI(title=settings.APP_NAME)
     
