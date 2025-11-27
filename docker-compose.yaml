@@ -1,0 +1,15 @@
+services:
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mipt_bc_server
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    env_file:
+      - ./.env
+    environment:
+      - APP_HOST=${APP_HOST}
+      - APP_PORT=${APP_PORT}
+    volumes:
+      - ./backend/app:/app/app
