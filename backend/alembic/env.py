@@ -1,6 +1,6 @@
 from alembic import context
 from sqlalchemy import engine_from_config, pool
-from infrastructure.sqlAlchemy import Base
+from app.core.database.base_model import Base
 # И еще импортируем модели из всех модулей
 
 config = context.config

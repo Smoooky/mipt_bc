@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     APP_PORT: int
     APP_HOST: str
 
+    DATABASE_URL: str
+
     class Config:
         env_file = '../../.env'
 
