@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 
 class Speaker(Base):
-    __tablename__ = 'speakers'
+    __tablename__ = 'Speakers'
 
     id = Column(Integer, primary_key=True)
     fullName = Column(String, nullable=False)
@@ -16,8 +16,8 @@ class Speaker(Base):
     position = Column(String, nullable=False) # Position ну типо должность у человека
     company = Column(String, nullable=False)
     photoURL = Column(String, nullable=True)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     event_links = relationship("EventSpeaker", back_populates="speaker")
-    events = relationship("Event", secondary="event_speakers", viewonly=True)
+    events = relationship("Event", secondary="EventSpeakers", viewonly=True)

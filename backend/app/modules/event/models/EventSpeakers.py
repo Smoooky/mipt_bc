@@ -5,12 +5,12 @@ import enum
 from datetime import datetime, timezone
 
 class EventSpeaker(Base):
-    __tablename__ = 'event_speakers'
+    __tablename__ = 'EventSpeakers'
 
-    event_id = Column(Integer, ForeignKey('events.id'), primary_key=True)
-    speaker_id = Column(Integer, ForeignKey('speakers.id'), primary_key=True)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    eventId = Column(Integer, ForeignKey('events.id'), primary_key=True)
+    speakerId = Column(Integer, ForeignKey('speakers.id'), primary_key=True)
+    createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
-    event = relationship('Event', back_populates='speaker_links')
-    speaker = relationship("Speaker", back_populates="event_links")
+    event = relationship('Event', back_populates='speakerLinks')
+    speaker = relationship("Speaker", back_populates="eventLinks")

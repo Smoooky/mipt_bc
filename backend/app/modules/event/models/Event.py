@@ -1,6 +1,6 @@
 """
 Docstring for backend.app.modules.event.models.Event
-Тут будет описываться модель СОБЫТИЯ
+Тут описывается модель СОБЫТИЯ
 """
 from core.database.base_model import Base
 from sqlalchemy import Column, Integer, String, TEXT, DateTime, Enum, event
@@ -15,7 +15,7 @@ class EventStatus(enum.Enum):
     ENDED = 'ended'
 
 class Event(Base):
-    __tablename__ = 'events'
+    __tablename__ = 'Events'
 
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
@@ -28,11 +28,11 @@ class Event(Base):
     streamLink = Column(String, nullable=True)
     coverUrl = Column(String, nullable=True) # Если что, я не знаю как мы будем обложку хранить, поэтому тут пока что именно такое тестовое название таблицы
     registrationLink = Column(String, nullable=True) # В use-кейсах указан этот параметр
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    speaker_links = relationship('EventSpeaker', back_populates='event')
-    speakers = relationship('Speaker', secondary='event_speakers', viewonly=True)
+    speakerLinks = relationship('EventSpeaker', back_populates='event')
+    speakers = relationship('Speaker', secondary='EventSpeakers', viewonly=True)
 
 # Проверка: хотя бы одно поле локации
 @event.listens_for(Event, "before_insert")
