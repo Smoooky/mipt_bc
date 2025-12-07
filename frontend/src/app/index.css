@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  line-height: 1.5 !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+
+  background-color: #0F1520 !important;
+
+  --color-text-thirst: black;
+  --color-text-second: #F8FAFC;
+  --color-text-third: #778496;
+
+  --color-accent-lightest: #00AAFF;
+  --color-accent-light: #3777DD;
+  --color-accent-border: #275DA6;
+
+  --color-bg-gradient: ;
+  --color-accent-gradient: linear-gradient(
+    to right,
+    #3885F6,
+    #04A8FF
+  );
+
+  --color-bg-dark: #0B0E14;
+  --color-bg-dark-grey: #152134;
+  --color-bg-header-dark: #12161fd5;
+  --color-bg-element-dark: #121821;
+
+  --color-border-dark: #111826;
+  --color-border-blue: #203964;
+
+  --shadow-accent-gradient: 0 4px 10px rgba(0, 0, 0, 0.25);
+
+  --relative-size: clamp(16px, 1vw, 48px);
+}
+
+html {
+  font-size: 16px;
+}
+
+@theme {
+  --color-text-thirst: black;
+  --color-text-second: #F8FAFC;
+  --color-text-third: #778496;
+
+  --color-accent-lightest: #00AAFF;
+  --color-accent-light: #3777DD;
+  --color-accent-border: #275DA6;
+
+  --color-bg-gradient: ;
+  --color-accent-gradient: linear-gradient(
+    to right,
+    #1479f2,
+    #3bcdfc
+  );
+
+  --color-bg-dark: #0B0E14;
+  --color-bg-header-dark: #12161fd5;
+  --color-bg-element-dark: #121821;
+
+  --color-border-dark: #111826;
+  --color-bg-dark-grey: #152134;
+  --color-border-blue: #203964;
+  --color-border-dark-grey: #1E2530;
+
+  --shadow-accent-gradient: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.accent-gradient {
+  background-image: var(--color-accent-gradient);
+}
+
+.accent-gradient-text {
+  background-image: var(--color-accent-gradient);
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  background-clip: text;
+  color: transparent;
+}
+
+.accent-gradient-shadow {
+  box-shadow: none;
+  transition: 0.2s;
+}
+
+.accent-gradient:hover {
+  box-shadow: 0px 15px 20px #3b68fc46;;
+}
+
+button {
+  display: inline;
+}
