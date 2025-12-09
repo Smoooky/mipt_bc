@@ -13,7 +13,7 @@ const Partners = () => {
                         Ведущие компании России поддерживают наши инициативы и помогают развитию молодых предпринимателей
                     </span>
                 </div>
-                <div className="flex flex-col gap-6 w-full">
+                <div className="flex flex-col gap-6 w-full items-center">
                     <div className="grid grid-cols-4 max-w-5xl w-full gap-6">
                         <div className="group flex flex-col gap-3 min-h-45 items-center justify-center rounded-xl bg-bg-element-dark box-border pt-6 pb-6 pl-6 pr-6 border border-border-dark-grey transition-transform duration-300 hover:-translate-y-2 element-shadow">
                             <div className="aspect-square w-[60px] rounded-xl bg-bg-element-grey flex justify-center items-center transition-colors duration-200 group-hover:bg-bg-element-blue">
