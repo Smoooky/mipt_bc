@@ -23,6 +23,21 @@
     #3885F6,
     #04A8FF
   );
+  --color-blue-gradient: linear-gradient(
+    to bottom right,
+    #3885F6,
+    #04A8FF
+  );
+  --color-green-gradient: linear-gradient(
+    to bottom right,
+    #70e689,
+    #6fb172
+  );
+  --color-pink-gradient: linear-gradient(
+    to bottom right,
+    #e270e6,
+    #b16fae
+  );
 
   --color-bg-dark: #0B0E14;
   --color-bg-dark-grey: #152134;

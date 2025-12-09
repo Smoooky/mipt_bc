@@ -1,6 +1,17 @@
 .accent-gradient {
   background-image: var(--color-accent-gradient);
-  transition: box-shadow 0.2s;
+}
+
+.blue-gradient {
+  background-image: var(--color-blue-gradient);
+}
+
+.green-gradient {
+  background-image: var(--color-green-gradient);
+}
+
+.pink-gradient {
+  background-image: var(--color-pink-gradient);
 }
 
 .accent-gradient-text {
