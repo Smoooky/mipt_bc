@@ -10,11 +10,12 @@
 
   --color-text-thirst: black;
   --color-text-second: #F8FAFC;
-  --color-text-third: #778496;
+  --color-text-third: #98a8be;
 
   --color-accent-lightest: #00AAFF;
   --color-accent-light: #3777DD;
   --color-accent-border: #275DA6;
+  --color-accent-darker: #132F4A;
 
   --color-bg-gradient: ;
   --color-accent-gradient: linear-gradient(
@@ -25,11 +26,18 @@
 
   --color-bg-dark: #0B0E14;
   --color-bg-dark-grey: #152134;
-  --color-bg-header-dark: #12161fd5;
+  --color-bg-light-grey: #11151C;
+  --color-bg-header-dark: #12161fe0;
   --color-bg-element-dark: #121821;
+  --color-bg-element-dark-blue: #121720;
+  --color-bg-element-blue: #162235;
+  --color-bg-element-grey: #1a1f27;
+  --color-bg-grey-transparent: #29303d9d;
 
   --color-border-dark: #111826;
   --color-border-blue: #203964;
+  --color-border-gray: #29303D;
+  --color-border-dark-grey: #1E2530;
 
   --shadow-accent-gradient: 0 4px 10px rgba(0, 0, 0, 0.25);
 
@@ -40,6 +48,10 @@ html {
   font-size: 16px;
 }
 
+.screen-width {
+   width: calc(100vw - var(--scrollbar-width));
+}
+
 @theme {
   --color-text-thirst: black;
   --color-text-second: #F8FAFC;
@@ -48,6 +60,7 @@ html {
   --color-accent-lightest: #00AAFF;
   --color-accent-light: #3777DD;
   --color-accent-border: #275DA6;
+  --color-accent-darker: #132F4A;
 
   --color-bg-gradient: ;
   --color-accent-gradient: linear-gradient(
@@ -57,38 +70,19 @@ html {
   );
 
   --color-bg-dark: #0B0E14;
-  --color-bg-header-dark: #12161fd5;
+  --color-bg-dark-grey: #152134;
+  --color-bg-light-grey: #11151C;
+  --color-bg-header-dark: #12161fe0;
   --color-bg-element-dark: #121821;
+  --color-bg-element-dark-blue: #121720;
+  --color-bg-element-blue: #162235;
+  --color-bg-element-grey: #1a1f27;
+  --color-bg-grey-transparent: #29303d9d;
 
   --color-border-dark: #111826;
-  --color-bg-dark-grey: #152134;
   --color-border-blue: #203964;
+  --color-border-gray: #29303D;
   --color-border-dark-grey: #1E2530;
 
   --shadow-accent-gradient: 0 4px 10px rgba(0, 0, 0, 0.25);
-}
-
-.accent-gradient {
-  background-image: var(--color-accent-gradient);
-}
-
-.accent-gradient-text {
-  background-image: var(--color-accent-gradient);
-  -webkit-background-clip: text; 
-  -webkit-text-fill-color: transparent; 
-  background-clip: text;
-  color: transparent;
-}
-
-.accent-gradient-shadow {
-  box-shadow: none;
-  transition: 0.2s;
-}
-
-.accent-gradient:hover {
-  box-shadow: 0px 15px 20px #3b68fc46;;
-}
-
-button {
-  display: inline;
 }

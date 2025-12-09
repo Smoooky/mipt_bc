@@ -8,10 +8,10 @@ const MainLayout = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex flex-col w-screen h-auto">
+    <div className="flex flex-col screen-width h-auto">
       {header}
 
-      <div className="_container flex-1 flex justify-center">{children}</div>
+      <div className="_container flex-1 flex flex-col items-center">{children}</div>
 
       {footer}
     </div>

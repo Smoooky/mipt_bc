@@ -1,31 +1,31 @@
 import './Hero.css'
-import bgNet from '../../assets/background/background-net.png';
+import bgNet from '../../../../assets/background/background-net.png';
 import Sparkle from 'src/widgets/Sparkle/Sparkle';
 
 const Hero = () => {
   return (
     <>
       <div 
-        className="absolute w-screen h-screen hero-background -z-1" 
+        className="absolute w-full h-screen hero-background -z-1" 
         style={{ 
             backgroundImage: `
                 url(${bgNet})
                 `, 
         }}
         />
-      <div className='_sparkles absolute w-screen h-screen z-0 flex justify-center items-center'>
+      <div className='_sparkles absolute w-full h-screen z-0 flex justify-center items-center'>
         <Sparkle size={100} duration={2.5} color='var(--color-accent-light)' x={'10%'} y={'5%'}/>
         <Sparkle size={100} duration={3} color='var(--color-border-blue)' x={'-10%'} y={'-5%'}/>
       </div>
       <div
-        className="absolute w-screen z-1 h-screen opacity-100"
+        className="absolute w-full z-1 h-screen opacity-100"
         style={{ 
             backgroundImage: `
                 linear-gradient(to bottom, rgba(23, 42, 69, 0) 50%, var(--color-bg-dark) 100%)
                 `, 
         }}
         />
-      <div className="w-screen h-screen flex justify-center items-center relative z-2">
+      <div className="w-full h-screen flex justify-center items-center relative z-2">
         <div className="flex flex-col gap-8 items-center max-w-[700px]">
             <div className="box-border pt-2 pb-2 pr-4 pl-4 border border-border-blue rounded-3xl">
                 <ul>
@@ -51,7 +51,7 @@ const Hero = () => {
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <button className="cursor-pointer pt-3 pb-3 pr-10 pl-10 rounded-xl accent-gradient transition-transform duration-200 hover:-translate-y-[0.125em]">
+                    <button className="cursor-pointer pt-3 pb-3 pr-10 pl-10 rounded-xl accent-gradient transition-all duration-200 hover:-translate-y-[0.125em]">
                         <span className="inline text-[1.2rem] font-bold">
                             {'Вступить в клуб ->'}
                         </span>
@@ -64,7 +64,7 @@ const Hero = () => {
                 </div>
             </div>
             <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-                <div className="min-w-[120px] flex flex-col gap-2 items-center justity-center rounded-xl bg-bg-element-dark box-border pt-4 pb-4 pl-14 pr-14 border border-border-dark-grey">
+                <div className="min-w-[120px] flex flex-col gap-2 items-center justity-center rounded-xl bg-bg-element-dark box-border pt-4 pb-4 pl-14 pr-14 border border-border-dark-grey transition-transform duration-300 hover:-translate-y-2 element-shadow">
                     <div className="text-2xl text-accent-light">
                         OOO
                     </div>
@@ -75,7 +75,7 @@ const Hero = () => {
                         Участников
                     </span>
                 </div>
-                <div className="min-w-[120px] flex flex-col gap-2 items-center justity-center rounded-xl bg-bg-element-dark box-border pt-4 pb-4 pl-14 pr-14 border border-border-dark-grey">
+                <div className="min-w-[120px] flex flex-col gap-2 items-center justity-center rounded-xl bg-bg-element-dark box-border pt-4 pb-4 pl-14 pr-14 border border-border-dark-grey transition-transform duration-300 hover:-translate-y-2 element-shadow">
                     <div className="text-2xl text-accent-lightest">
                         ААА
                     </div>
@@ -86,7 +86,7 @@ const Hero = () => {
                         Стартапов
                     </span>
                 </div>
-                <div className="min-w-[120px] flex flex-col gap-2 items-center justity-center rounded-xl bg-bg-element-dark box-border pt-4 pb-4 pl-14 pr-14 border border-border-dark-grey">
+                <div className="min-w-[120px] flex flex-col gap-2 items-center justity-center rounded-xl bg-bg-element-dark box-border pt-4 pb-4 pl-14 pr-14 border border-border-dark-grey transition-transform duration-300 hover:-translate-y-2 element-shadow">
                     <div className="text-2xl text-accent-light">
                         УУУ
                     </div>

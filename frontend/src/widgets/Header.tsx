@@ -1,7 +1,7 @@
 const Header = () => {
   return (
     <>
-      <div className="_header w-screen fixed z-100 flex justify-between p-4 box-border bg-bg-header-dark rounded-b-2xl border-b-border-dark border-b">
+      <div className="_header w-full fixed z-100 flex justify-between p-4 box-border bg-bg-header-dark rounded-b-2xl border-b-border-dark border-b">
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center">
             <div className="p-2 box-border accent-gradient aspect-square flex justify-center items-center rounded-xl">

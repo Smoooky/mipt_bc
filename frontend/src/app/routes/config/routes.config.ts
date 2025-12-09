@@ -2,7 +2,7 @@ import type { ComponentType } from "react";
 import MainLayout from "../../../layouts/main.layout";
 import Header from "../../../widgets/Header";
 import Footer from "../../../widgets/Footer";
-import Landing from "../../../pages/Landing";
+import Landing from "../../../pages/Landing/Landing";
 
 export interface LayoutProps {
   children: React.ReactNode;
