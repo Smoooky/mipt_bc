@@ -13,3 +13,15 @@ services:
       - APP_PORT=${APP_PORT}
     volumes:
       - ./backend/app:/app/app
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: mipt_bc_frontend
+    ports:
+      - "9973:9973"   # порт, на котором будет доступен фронт
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: unless-stopped

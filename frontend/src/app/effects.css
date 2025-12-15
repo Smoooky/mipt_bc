@@ -1,0 +1,44 @@
+.accent-gradient {
+  background-image: var(--color-accent-gradient);
+}
+
+.blue-gradient {
+  background-image: var(--color-blue-gradient);
+}
+
+.green-gradient {
+  background-image: var(--color-green-gradient);
+}
+
+.pink-gradient {
+  background-image: var(--color-pink-gradient);
+}
+
+.accent-gradient-text {
+  background-image: var(--color-accent-gradient);
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+  background-clip: text;
+  color: transparent;
+}
+
+.accent-gradient-only {
+    background-image: var(--color-accent-gradient);
+}
+
+.accent-gradient-shadow {
+  box-shadow: none;
+  transition: 0.2s;
+}
+
+.accent-gradient:hover {
+  box-shadow: 0px 15px 20px #3b68fc46;;
+}
+
+.element-shadow {
+    transition: 0.3s;
+}
+
+.element-shadow:hover {
+    box-shadow: 0px 0px 40px #426eff46;;
+}

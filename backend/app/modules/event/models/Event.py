@@ -2,7 +2,7 @@
 Docstring for backend.app.modules.event.models.Event
 Тут описывается модель СОБЫТИЯ
 """
-from core.database.base_model import Base
+from ....core.database.base_model import Base
 from sqlalchemy import Column, Integer, String, TEXT, DateTime, Enum, event
 from sqlalchemy.orm import relationship
 import enum
@@ -27,7 +27,7 @@ class Event(Base):
     onlineMeetingSpace = Column(String, nullable=True)
     streamLink = Column(String, nullable=True)
     coverUrl = Column(String, nullable=True) # Если что, я не знаю как мы будем обложку хранить, поэтому тут пока что именно такое тестовое название таблицы
-    registrationLink = Column(String, nullable=True) # В use-кейсах указан этот параметр
+    registrationLink = Column(String, nullable=False) # В use-кейсах указан этот параметр
     createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 

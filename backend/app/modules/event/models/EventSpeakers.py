@@ -1,10 +1,10 @@
-from core.database.base_model import Base
+from ....core.database.base_model import Base
 from sqlalchemy import Column, Integer, TEXT, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime, timezone
 
-class EventSpeaker(Base):
+class EventSpeakers(Base):
     __tablename__ = 'EventSpeakers'
 
     eventId = Column(Integer, ForeignKey('events.id'), primary_key=True)
