@@ -1,7 +1,9 @@
-from backend.app.core.app import App
+from app.core.app import App
 
-app = App()
-app.setup()
+app_instance  = App()
+app_instance.setup()
+
+app = app_instance.fastapi_app
 
 if __name__ == "__main__":
     app.start()
