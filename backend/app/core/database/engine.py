@@ -3,5 +3,8 @@ from ..config import settings
 
 engine =  create_async_engine(
     settings.DATABASE_URL,
-    echo=False,
+    echo=True,  # Включите для отладки
+    pool_pre_ping=True,  # Проверка соединения перед использованием
 )
+
+print(settings.DATABASE_URL)
