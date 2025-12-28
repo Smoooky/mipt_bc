@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class speakerCreate(BaseModel):
+class SpeakerCreate(BaseModel):
     fullName: str
     bio: Optional[str] = None
     position: str

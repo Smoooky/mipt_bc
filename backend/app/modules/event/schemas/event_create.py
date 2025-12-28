@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 from ..models import EventStatus
 
-class eventCreate(BaseModel):
+class EventCreate(BaseModel):
     title: str
     description: str
     startDate: datetime

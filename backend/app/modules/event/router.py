@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate, EventGet
+from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate
 from .service import EventService
 from app.core.database import get_session
 

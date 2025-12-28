@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
-from app.modules.event.models.event import eventStatus
-from app.modules.event.schemas.speakerResponse import speakerResponse
+from app.modules.event.models.event import EventStatus
+from backend.app.modules.event.schemas.speaker_response import SpeakerResponse
 
-class eventResponse(BaseModel):
+class EventResponse(BaseModel):
     """
     Схема полной модели события
     """
@@ -13,14 +13,14 @@ class eventResponse(BaseModel):
     description: str
     startDate: datetime
     endDate: Optional[datetime] = None
-    status: eventStatus
+    status: EventStatus
     irlMeetingSpace: Optional[str] = None
     onlineMeetingSpace: Optional[str] = None
     streamLink: Optional[str] = None
     coverUrl: Optional[str] = None
     registrationLink: str
 
-    speakers: List[speakerResponse] = []
+    speakers: List[SpeakerResponse] = []
 
     model_config = {
         "from_attributes": True

@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime, timezone
 
-class eventSpeakers(Base):
+class EventSpeakers(Base):
     __tablename__ = 'EventSpeakers'
 
     eventId = Column(Integer, ForeignKey('events.id'), primary_key=True)

@@ -8,13 +8,13 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime, timezone
 
-class eventStatus(enum.Enum):
+class EventStatus(enum.Enum):
     FUTURE = 'future'
     CURRENT = 'current'
     STARTED = 'started'
     ENDED = 'ended'
 
-class event(Base):
+class Event(Base):
     __tablename__ = 'Events'
 
     id = Column(Integer, primary_key=True)
@@ -22,7 +22,7 @@ class event(Base):
     description = Column(TEXT, nullable=False)
     startDate = Column(DateTime, nullable=False)
     endDate = Column(DateTime, nullable=True)
-    status = Column(Enum(eventStatus), default=eventStatus.FUTURE)
+    status = Column(Enum(EventStatus), default=EventStatus.FUTURE)
     irlMeetingSpace = Column(String, nullable=True) # Мероприятие может быть либо в ирл либо в онлайн, поэтому и то и то опционально. Но лучше как-то проверять, что одно из этого точно есть
     onlineMeetingSpace = Column(String, nullable=True)
     streamLink = Column(String, nullable=True)

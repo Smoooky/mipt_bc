@@ -7,7 +7,7 @@ from sqlalchemy import Column, Integer, String, TEXT, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 
-class speaker(Base):
+class Speaker(Base):
     __tablename__ = 'Speakers'
 
     id = Column(Integer, primary_key=True)

@@ -1,3 +1,3 @@
-from .event import event, eventStatus
-from .eventSpeakers import eventSpeakers
-from .speaker import speaker
+from .event import Event, EventStatus
+from .event_speakers import EventSpeakers
+from .speaker import Speaker
