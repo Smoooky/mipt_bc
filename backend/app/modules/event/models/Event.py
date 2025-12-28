@@ -35,8 +35,8 @@ class Event(Base):
     speakers = relationship('Speaker', secondary='EventSpeakers', viewonly=True)
 
 # Проверка: хотя бы одно поле локации
-@event.listens_for(event, "before_insert")
-@event.listens_for(event, "before_update")
+@event.listens_for(Event, "before_insert")
+@event.listens_for(Event, "before_update")
 def check_location(target):
     if not target.irlMeetingSpace and not target.onlineMeetingSpace:
         raise ValueError("Event must have either IRL or online meeting space")

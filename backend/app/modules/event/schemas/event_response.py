@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
 from app.modules.event.models.event import EventStatus
-from backend.app.modules.event.schemas.speaker_response import SpeakerResponse
+from app.modules.event.schemas.speaker_response import SpeakerResponse
 
 class EventResponse(BaseModel):
     """
