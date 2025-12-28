@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  line-height: 1.5 !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+
+  background-color: #0F1520 !important;
+
+  --color-text-thirst: black;
+  --color-text-second: #F8FAFC;
+  --color-text-third: #98a8be;
+
+  --color-accent-lightest: #00AAFF;
+  --color-accent-light: #3777DD;
+  --color-accent-border: #275DA6;
+  --color-accent-darker: #132F4A;
+
+  --color-bg-gradient: ;
+  --color-accent-gradient: linear-gradient(
+    to right,
+    #3885F6,
+    #04A8FF
+  );
+  --color-blue-gradient: linear-gradient(
+    to bottom right,
+    #3885F6,
+    #04A8FF
+  );
+  --color-green-gradient: linear-gradient(
+    to bottom right,
+    #70e689,
+    #6fb172
+  );
+  --color-pink-gradient: linear-gradient(
+    to bottom right,
+    #e270e6,
+    #b16fae
+  );
+
+  --color-bg-dark: #0B0E14;
+  --color-bg-dark-grey: #152134;
+  --color-bg-light-grey: #11151C;
+  --color-bg-header-dark: #12161fe0;
+  --color-bg-element-dark: #121821;
+  --color-bg-element-dark-blue: #121720;
+  --color-bg-element-blue: #162235;
+  --color-bg-element-grey: #1a1f27;
+  --color-bg-grey-transparent: #29303d9d;
+
+  --color-border-dark: #111826;
+  --color-border-blue: #203964;
+  --color-border-gray: #29303D;
+  --color-border-dark-grey: #1E2530;
+
+  --shadow-accent-gradient: 0 4px 10px rgba(0, 0, 0, 0.25);
+
+  --relative-size: clamp(16px, 1vw, 48px);
+}
+
+html {
+  font-size: 16px;
+}
+
+.screen-width {
+   width: calc(100vw - var(--scrollbar-width));
+}
+
+@theme {
+  --color-text-thirst: black;
+  --color-text-second: #F8FAFC;
+  --color-text-third: #778496;
+
+  --color-accent-lightest: #00AAFF;
+  --color-accent-light: #3777DD;
+  --color-accent-border: #275DA6;
+  --color-accent-darker: #132F4A;
+
+  --color-bg-gradient: ;
+  --color-accent-gradient: linear-gradient(
+    to right,
+    #1479f2,
+    #3bcdfc
+  );
+
+  --color-bg-dark: #0B0E14;
+  --color-bg-dark-grey: #152134;
+  --color-bg-light-grey: #11151C;
+  --color-bg-header-dark: #12161fe0;
+  --color-bg-element-dark: #121821;
+  --color-bg-element-dark-blue: #121720;
+  --color-bg-element-blue: #162235;
+  --color-bg-element-grey: #1a1f27;
+  --color-bg-grey-transparent: #29303d9d;
+
+  --color-border-dark: #111826;
+  --color-border-blue: #203964;
+  --color-border-gray: #29303D;
+  --color-border-dark-grey: #1E2530;
+
+  --shadow-accent-gradient: 0 4px 10px rgba(0, 0, 0, 0.25);
+}

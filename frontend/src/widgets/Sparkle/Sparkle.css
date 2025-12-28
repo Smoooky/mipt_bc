@@ -1,0 +1,19 @@
+.sparkle-shadow {
+  width: var(--sparkle-size, 1px);
+  height: var(--sparkle-size, 1px);
+  background: transparent;
+  border-radius: 50%;
+  animation: sparkle-shadow var(--sparkle-duration, 1.5s) infinite ease-in-out;
+  filter: blur(var(--sparkle-size));
+}
+
+@keyframes sparkle-shadow {
+  0%,100% {
+    box-shadow: 0 0 var(--sparkle-blur-start, 6px) var(--sparkle-spread, 2px) var(--sparkle-color, #fff);
+    opacity: 0.6;
+  }
+  50% {
+    box-shadow: 0 0 var(--sparkle-blur-mid, 12px) var(--sparkle-spread, 4px) var(--sparkle-color, #fff);
+    opacity: 1;
+  }
+}

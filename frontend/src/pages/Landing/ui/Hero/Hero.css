@@ -1,0 +1,7 @@
+.hero-background {
+    position: absolute;
+    background-repeat: repeat;
+    opacity: 0.05;
+    z-index: 0;
+    background-size: 600px 600px;
+}
