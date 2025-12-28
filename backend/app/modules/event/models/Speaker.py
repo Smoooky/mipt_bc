@@ -2,12 +2,12 @@
 Docstring for backend.app.modules.event.models.Speaker
 Тут описывается модель СПИКЕРА
 """
-from ....core.database.base_model import Base
+from app.core.database.base_model import Base
 from sqlalchemy import Column, Integer, String, TEXT, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 
-class Speaker(Base):
+class speaker(Base):
     __tablename__ = 'Speakers'
 
     id = Column(Integer, primary_key=True)

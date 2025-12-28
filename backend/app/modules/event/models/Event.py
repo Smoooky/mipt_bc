@@ -2,19 +2,19 @@
 Docstring for backend.app.modules.event.models.Event
 Тут описывается модель СОБЫТИЯ
 """
-from ....core.database.base_model import Base
+from app.core.database.base_model import Base
 from sqlalchemy import Column, Integer, String, TEXT, DateTime, Enum, event
 from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime, timezone
 
-class EventStatus(enum.Enum):
+class eventStatus(enum.Enum):
     FUTURE = 'future'
     CURRENT = 'current'
     STARTED = 'started'
     ENDED = 'ended'
 
-class Event(Base):
+class event(Base):
     __tablename__ = 'Events'
 
     id = Column(Integer, primary_key=True)
@@ -22,7 +22,7 @@ class Event(Base):
     description = Column(TEXT, nullable=False)
     startDate = Column(DateTime, nullable=False)
     endDate = Column(DateTime, nullable=True)
-    status = Column(Enum(EventStatus), default=EventStatus.FUTURE)
+    status = Column(Enum(eventStatus), default=eventStatus.FUTURE)
     irlMeetingSpace = Column(String, nullable=True) # Мероприятие может быть либо в ирл либо в онлайн, поэтому и то и то опционально. Но лучше как-то проверять, что одно из этого точно есть
     onlineMeetingSpace = Column(String, nullable=True)
     streamLink = Column(String, nullable=True)
@@ -35,8 +35,8 @@ class Event(Base):
     speakers = relationship('Speaker', secondary='EventSpeakers', viewonly=True)
 
 # Проверка: хотя бы одно поле локации
-@event.listens_for(Event, "before_insert")
-@event.listens_for(Event, "before_update")
+@event.listens_for(event, "before_insert")
+@event.listens_for(event, "before_update")
 def check_location(target):
     if not target.irlMeetingSpace and not target.onlineMeetingSpace:
         raise ValueError("Event must have either IRL or online meeting space")

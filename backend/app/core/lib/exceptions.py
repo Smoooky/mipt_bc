@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from ..logging.logger import logger
+from .ApiError import ApiError
 
 def handle_exception(e: Exception, context: dict = None):
     """
@@ -8,6 +9,20 @@ def handle_exception(e: Exception, context: dict = None):
     context - словарь с ключевой информацией, например {"event_id": 42, "user_id": 5}
     """
     extra_data = context or {}
+
+    if isinstance(e, ApiError):
+        extra_data.update({
+            "error_type": type(e).__name__,
+            "message": e.message,
+            "status_code": e.status_code,
+        })
+
+        logger.warning("Application error", extra_data=extra_data)
+
+        raise HTTPException(
+            status_code=e.status_code,
+            detail=e.message
+        )
 
     if isinstance(e, SQLAlchemyError):
         extra_data.update({
