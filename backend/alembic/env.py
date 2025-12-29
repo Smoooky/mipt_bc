@@ -4,7 +4,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from app.modules.event.models import *
+from app.modules.event.models import Event, Speaker, EventSpeakers
 from app.core.database.base_model import Base
 from app.core.config import settings
 
@@ -18,8 +18,6 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
-
-config.set_main_option('sqlalchemy.url', settings.DATABASE_URL)
 
 # add your model's MetaData object here
 # for 'autogenerate' support

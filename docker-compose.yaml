@@ -63,8 +63,10 @@ services:
     - ./.env 
     command: |
       sh -c "
-      # Просто небольшая задержка на всякий случай
-      sleep 5
+      sleep 10
+      echo 'Создаем миграцию...'
+      alembic revision --autogenerate -m 'init'
+      echo 'Применяем миграции...'
       alembic upgrade head
       "
     restart: "no"

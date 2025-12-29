@@ -6,5 +6,3 @@ engine =  create_async_engine(
     echo=True,  # Включите для отладки
     pool_pre_ping=True,  # Проверка соединения перед использованием
 )
-
-print(settings.DATABASE_URL)
