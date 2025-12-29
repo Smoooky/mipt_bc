@@ -31,7 +31,7 @@ class Event(Base):
     createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    speakerLinks = relationship('EventSpeaker', back_populates='event')
+    speakerLinks = relationship('EventSpeaker', back_populates='events')
     speakers = relationship('Speaker', secondary='EventSpeakers', viewonly=True)
 
 # Проверка: хотя бы одно поле локации
