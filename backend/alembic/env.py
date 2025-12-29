@@ -4,11 +4,12 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from app.modules.event.models import Event, Speaker, EventSpeakers
-from app.core.database.base_model import Base
-from app.core.config import settings
-
 from alembic import context
+
+from app.core.config import settings
+from app.core.database.base_model import Base
+
+from app.modules.event.models import Event, Speaker, EventSpeaker
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -70,7 +71,13 @@ def run_migrations_online() -> None:
     asyncio.run(run_async_migrations())
 
 def do_run_migrations(connection: Connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection, 
+        target_metadata=target_metadata,
+        compare_type=True,           # Сравнивать типы колонок
+        compare_server_default=True, # Сравнивать значения по умолчанию
+        include_schemas=True,        # Включать схемы
+    )
     with context.begin_transaction():
         context.run_migrations()
 
