@@ -2,7 +2,7 @@
 Docstring for backend.app.modules.event.models.Speaker
 Тут описывается модель СПИКЕРА
 """
-from core.database.base_model import Base
+from app.core.database.base_model import Base
 from sqlalchemy import Column, Integer, String, TEXT, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
@@ -19,5 +19,5 @@ class Speaker(Base):
     createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    event_links = relationship("EventSpeaker", back_populates="speaker")
+    eventLinks = relationship("EventSpeaker", back_populates="speakers")
     events = relationship("Event", secondary="EventSpeakers", viewonly=True)
