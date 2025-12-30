@@ -1,9 +1,9 @@
-from .ApiError import ApiErrors
+from .api_error import ApiErrors
 from .handle_exception import handle_exception
-from .CustomHTTPException import CustomHTTPException
+from .custom_http_exception import CustomHTTPException
 
 __all__ = [
-    'CustomHTTPException', 
+    'custom_http_exception', 
     'handle_exception', 
     'ApiErrors'
 ]

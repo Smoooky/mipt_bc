@@ -6,12 +6,12 @@ from ..models import EventStatus
 class EventCreate(BaseModel):
     title: str
     description: str
-    startDate: datetime
-    endDate: Optional[datetime] = None
+    start_date: datetime
+    end_date: Optional[datetime] = None
     status: Optional[EventStatus] = EventStatus.FUTURE
-    irlMeetingSpace: Optional[str] = None
-    onlineMeetingSpace: Optional[str] = None
-    streamLink: Optional[str] = None
-    coverUrl: Optional[str] = None
-    registrationLink: str
-    speakerIds: Optional[List[int]] = [] 
+    irl_meeting_space: Optional[str] = None
+    online_meeting_space: Optional[str] = None
+    stream_link: Optional[str] = None
+    cover_url: Optional[str] = None
+    registration_link: str
+    speaker_ids: Optional[List[int]] = [] 

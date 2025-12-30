@@ -11,10 +11,10 @@ from datetime import datetime, timezone
 class EventSpeaker(Base):
     __tablename__ = 'EventSpeakers'
 
-    eventId = Column(Integer, ForeignKey('Events.id'), primary_key=True)
-    speakerId = Column(Integer, ForeignKey('Speakers.id'), primary_key=True)
-    createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    event_id = Column(Integer, ForeignKey('Events.id', ondelete='CASCADE'), primary_key=True)
+    speaker_id = Column(Integer, ForeignKey('Speakers.id', ondelete='CASCADE'), primary_key=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
-    events = relationship('Event', back_populates='speakerLinks')
-    speakers = relationship("Speaker", back_populates="eventLinks")
+    events = relationship('Event', back_populates='speaker_links')
+    speakers = relationship("Speaker", back_populates="event_links")
