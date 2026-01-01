@@ -14,26 +14,23 @@ class AuthService:
         self.registration_page_url = settings.REGISTRATION_PAGE_URL
     
     async def register_user(self, data: RegisterUserPayload, invite_token: str) -> AuthResponse:
-        # Проверка приглашения до работы с транзакцией
-        invite = await self.session.scalar(
-            select(Invite).where(Invite.token == invite_token)
-        )
-        if not invite:
-            raise ApiErrors.Unauthorized('Invalid invite link')
-        if invite.used_at:
-            raise ApiErrors.Conflict('Invite link already used')
-        if invite.expires_at and invite.expires_at < datetime.now(timezone.utc):
-            raise ApiErrors.Conflict('Invite link expired')
-
-        # Проверка существующего пользователя
-        existence = await self.session.scalar(
-            select(User).where(User.email == data.email)
-        )
-        if existence:
-            raise ApiErrors.Conflict(f'User with email {data.email} already exists')
-
         try:
-            # Добавляем пользователя и обновляем invite
+            invite = await self.session.scalar(
+                select(Invite).where(Invite.token == invite_token)
+            )
+            if not invite:
+                raise ApiErrors.Unauthorized('Invalid invite link')
+            if invite.used_at:
+                raise ApiErrors.Conflict('Invite link already used')
+            if invite.expires_at and invite.expires_at < datetime.now(timezone.utc):
+                raise ApiErrors.Conflict('Invite link expired')
+
+            existence = await self.session.scalar(
+                select(User).where(User.email == data.email)
+            )
+            if existence:
+                raise ApiErrors.Conflict(f'User with email {data.email} already exists')
+
             user = User(
                 email=data.email,
                 password_hash=hash_password(data.password),
@@ -42,14 +39,13 @@ class AuthService:
             )
 
             self.session.add(user)
-            await self.session.flush()  # чтобы получить id пользователя
+            await self.session.flush()
 
             invite.used_at = datetime.now(timezone.utc)
             invite.used_by_id = user.id
             self.session.add(invite)
 
-            # если внешний код не оборачивает в begin(), можно здесь явно:
-            # async with self.session.begin(): pass  # только если нужно
+            await self.session.commit()
 
             access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
 
@@ -60,7 +56,6 @@ class AuthService:
             )
 
         except Exception as e:
-            # Безопасно передаем контекст прямо в handle_exception
             handle_exception(
                 e,
                 context={
@@ -81,10 +76,7 @@ class AuthService:
             if not verify_password(data.password, user.password_hash):
                 raise ApiErrors.Unauthorized(f'Invalid credentials. Incorrect password')
             
-            access_token = generate_access_token(
-                user.id,
-                user.tech_role
-            )
+            access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
 
             return AuthResponse(
                 user=UserResponse.model_validate(user),

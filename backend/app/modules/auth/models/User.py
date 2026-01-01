@@ -10,7 +10,7 @@ from sqlalchemy.orm import relationship, declared_attr
 import enum
 from datetime import datetime, timezone
 
-class UserRole(enum.Enum):
+class UserRole(str, enum.Enum):
     MEMBER = 'member'
     ORGANIZER = 'organizer'
     MANAGER = 'manager'
