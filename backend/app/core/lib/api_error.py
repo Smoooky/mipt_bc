@@ -19,7 +19,12 @@ class _Conflict(ApiError):
     status_code = 409
     message = 'Conflict'
 
+class _Unauthorized(ApiError):
+    status_code = 401
+    message = 'Unauthorized'
+
 class ApiErrors:
     BadRequest = _BadRequest
     NotFound = _NotFound
     Conflict = _Conflict
+    Unauthorized = _Unauthorized

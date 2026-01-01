@@ -5,8 +5,7 @@ from sqlalchemy.orm import selectinload
 from .schemas import EventCreate, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings, EventUpdate, SpeakerUpdate
 from .models import Event, EventSpeaker, Speaker
 from app.core.logging.logger import logger
-from app.core.lib import handle_exception
-from app.core.lib.api_error import ApiErrors
+from app.core.lib import handle_exception, ApiErrors
 from typing import List
 
 class EventService:
