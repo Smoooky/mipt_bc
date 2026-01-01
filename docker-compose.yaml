@@ -1,3 +1,5 @@
+version: '3.8' 
+
 services:
   server:
     build:
@@ -12,7 +14,9 @@ services:
       - APP_HOST=${APP_HOST}
       - APP_PORT=${APP_PORT}
     volumes:
-      - ./backend/app:/app/app
+       - ./backend:/app
+    depends_on:
+       - migrations  # Сервер будет ждать завершения migrations
   
   frontend:
     build:
@@ -20,8 +24,52 @@ services:
       dockerfile: Dockerfile.dev
     container_name: mipt_bc_frontend
     ports:
-      - "9973:9973"   # порт, на котором будет доступен фронт
+      - "9973:9973"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     restart: unless-stopped
+
+  postgres:
+    image: postgres:latest
+    container_name: mipt_bc_postgres
+    environment:
+      POSTGRES_DB: mipt_db
+      POSTGRES_USER: mipt_admin
+      POSTGRES_PASSWORD: pop_muzik_lover
+    ports:
+      - "7654:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mipt_admin -d mipt_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    build: ./backend
+    container_name: mipt_bc_migrations  # ← ДОБАВЬТЕ имя контейнера
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://mipt_admin:pop_muzik_lover@mipt_bc_postgres:5432/mipt_db
+      APP_PORT: 7812
+      APP_HOST: 0.0.0.0
+    volumes:
+      - ./backend:/app  # ← ДОБАВЬТЕ volume для миграций
+    env_file:
+    - ./.env 
+    command: |
+      sh -c "
+      sleep 10
+      echo 'Создаем миграцию...'
+      alembic revision --autogenerate -m 'init'
+      echo 'Применяем миграции...'
+      alembic upgrade head
+      "
+    restart: "no"
+
+volumes: 
+  postgres_data:
