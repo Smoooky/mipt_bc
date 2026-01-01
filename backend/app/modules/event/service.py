@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 from sqlalchemy import delete
 from sqlalchemy.orm import selectinload
-from .schemas import EventCreate, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings
+from .schemas import EventCreate, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings, EventUpdate, SpeakerUpdate
 from .models import Event, EventSpeaker, Speaker
 from app.core.logging.logger import logger
 from app.core.lib import handle_exception
@@ -60,6 +60,80 @@ class EventService:
                 context={
                     "error_code": "EVENT_CREATE_ERROR",
                     "event_title": event_in.title,
+                },
+            )
+    
+    async def update_event(self, event_id: int, event_in: EventUpdate) -> Event:
+        try:
+            async with self.session.begin():
+                stmt = select(Event).where(Event.id == event_id)
+                result = await self.session.execute(stmt)
+                event = result.scalars().first()
+
+                if not event:
+                    raise ApiErrors.NotFound(f'Event with id {event_id} not found')
+                
+                update_data = event_in.model_dump(
+                    exclude_unset=True,
+                    exclude={'speakers'}
+                )
+
+                for field, value in update_data.items():
+                    setattr(event, field, value)
+                
+                if event_in.speakers:
+                    speakers = event_in.speakers
+
+                    if speakers.speakers_to_delete:
+                        await self.session.execute(
+                            delete(EventSpeaker).where(
+                                EventSpeaker.event_id == event_id,
+                                EventSpeaker.speaker_id.in_(
+                                    speakers.speakers_to_delete
+                                )
+                            )
+                        )
+
+                    if speakers.speakers_to_connect:
+                        for speaker_id in speakers.speakers_to_connect:
+                            stmt = select(Speaker).where(Speaker.id == speaker_id)
+                            result = await self.session.execute(stmt)
+                            speaker = result.scalar_one_or_none()
+
+                            if not speaker:
+                                raise ApiErrors.NotFound(f'Speaker with id ${speaker_id} not found')
+                            
+                            stmt = select(EventSpeaker).where(
+                                EventSpeaker.event_id == event_id,
+                                EventSpeaker.speaker_id == speaker_id
+                            )
+                            result = await self.session.execute(stmt)
+                            link_exists = result.scalar_one_or_none()
+
+                            if link_exists:
+                                continue
+                        
+                            self.session.add(
+                                EventSpeaker(
+                                    event_id=event.id,
+                                    speaker_id=speaker.id
+                                )
+                            )
+
+            stmt = (
+                select(Event)
+                .options(selectinload(Event.speakers))
+                .where(Event.id == event.id)
+            )            
+            result = await self.session.execute(stmt)
+            return result.scalar_one()
+
+        except Exception as e:
+            handle_exception(
+                e,
+                context={
+                    "error_code": "EVENT_UPDATE_ERROR",
+                    "event_id": event_id,
                 },
             )
 
@@ -126,6 +200,13 @@ class EventService:
 
     async def delete_event(self, event_id: int) -> None:
         try:
+            ex_stmt = select(Event).where(Event.id == event_id)
+            result = await self.session.execute(ex_stmt)
+            existence = result.scalars().first()
+
+            if not existence:
+                raise ApiErrors.NotFound(f'Event with id {event_id} not found')
+
             stmt = delete(Event).where(Event.id == event_id)
             await self.session.execute(stmt)
             await self.session.commit()
@@ -157,8 +238,36 @@ class EventService:
             handle_exception(
                 e,
                 context={
-                    "erorr_code": "SPEAKER_CREATE_ERROR",
+                    "error_code": "SPEAKER_CREATE_ERROR",
                     "speaker_name": speaker_in.full_name,
+                },
+            )
+
+    async def update_speaker(self, speaker_id: int, speaker_in: SpeakerUpdate) -> Speaker:
+        try:
+            async with self.session.begin():
+                stmt = select(Speaker).where(Speaker.id == speaker_id)
+                result = await self.session.execute(stmt)
+                speaker = result.scalars().first()
+
+                if not speaker:
+                    raise ApiErrors.NotFound(f'Speaker with id {speaker_id} not found')
+            
+                update_data = speaker_in.model_dump(
+                    exclude_unset=True
+                )
+
+                for field, value in update_data.items():
+                    setattr(speaker, field, value)
+
+            return speaker
+        
+        except Exception as e:
+            handle_exception(
+                e,
+                context={
+                    "error_code": "SPEAKER_UPDATE_ERROR",
+                    "speaker_id": speaker_id,
                 },
             )
 
@@ -216,6 +325,13 @@ class EventService:
 
     async def delete_speaker(self, speaker_id: int) -> None:
         try:
+            ex_stmt = select(Speaker).where(Speaker.id == speaker_id)
+            result = await self.session.execute(ex_stmt)
+            existence = result.scalars().first()
+
+            if not existence:
+                raise ApiErrors.NotFound(f'Speaker with id {speaker_id} not found')
+
             stmt = delete(Speaker).where(Speaker.id == speaker_id)
             await self.session.execute(stmt)
             await self.session.commit()

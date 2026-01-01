@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, status, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings
-from .models import EventStatus
+from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings, EventUpdate, SpeakerUpdate
 from .service import EventService
 from app.core.database import get_session
 from typing import List
-from datetime import datetime
 
 router = APIRouter()
 
@@ -27,8 +25,21 @@ async def create_event(
     service = EventService(session)
     return await service.create_event(payload)
     
+@router.patch(
+    "/{id}",
+    response_model=EventResponse,
+    status_code=status.HTTP_200_OK
+)
+async def update_event(
+    id: int,
+    payload: EventUpdate,
+    session: AsyncSession = Depends(get_session)
+):
+    service = EventService(session)
+    return await service.update_event(id, payload)
+
 @router.get(
-    "",
+    "/{id}",
     response_model=EventResponse,
     status_code=status.HTTP_200_OK
 )
@@ -55,7 +66,7 @@ async def search_event(
     return await service.search_events(params, settings)
 
 @router.delete(
-    '',
+    '/{id}',
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_event(
@@ -79,6 +90,19 @@ async def create_speaker(
 ):
     service = EventService(session)
     return await service.create_speaker(payload)
+
+@router.patch(
+    '/speaker/{id}',
+    response_model=SpeakerResponse,
+    status_code=status.HTTP_200_OK
+)
+async def update_speaker(
+    id: int,
+    payload: SpeakerUpdate,
+    session: AsyncSession = Depends(get_session)
+):
+    service = EventService(session)
+    return await service.update_speaker(id, payload)
     
 @router.get(
     '/speaker/search',
@@ -108,7 +132,7 @@ async def get_speaker(
     return await service.get_speaker(id)
 
 @router.delete(
-    '/speaker',
+    '/speaker/{id}',
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_speaker(
