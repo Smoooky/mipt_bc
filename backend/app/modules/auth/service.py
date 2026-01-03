@@ -168,12 +168,16 @@ class AuthService:
                 select(User).where(User.id == old_refresh_token.user_id)
             )
 
+            if not user:
+                raise ApiErrors.NotFound(f'User with id {old_refresh_token.user_id} not found')
+
             new_access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
             new_refresh_token = generate_refresh_token()
-            await self.session.add(
+
+            self.session.add(
                 RefreshToken(
-                    user_id = user.id,
-                    token_hash = hash_refresh_token(new_refresh_token),
+                    user_id = old_refresh_token.user_id,
+                    token_hash = hash_refresh_token(new_refresh_token.token),
                     expires_at = new_refresh_token.expires_at
                 )
             )
@@ -188,6 +192,5 @@ class AuthService:
                 e,
                 context={
                     "error_code": "REFRESH_TOKENS_ERROR",
-
                 }
             )

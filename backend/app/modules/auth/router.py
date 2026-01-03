@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, Response, Request, Cookie, Header
 from sqlalchemy.ext.asyncio import AsyncSession
-from .schemas import AuthResponse, RegisterUserPayload, LoginUserPayload, InviteTokenData
+from .schemas import AuthResponse, LoginUserPayload, InviteTokenData, UserResponse
 from app.core.database import get_session
 from app.core.lib import CustomHTTPException
 from .service import AuthService
@@ -19,7 +19,7 @@ async def ping():
 )
 async def register_user(
     token: str,
-    payload: RegisterUserPayload,
+    payload: UserResponse,
     response: Response,
     session: AsyncSession = Depends(get_session),
 ):
@@ -39,7 +39,6 @@ async def register_user(
 
 @router.post(
     '/login',
-    response_model=AuthResponse,
     status_code=status.HTTP_200_OK
 )
 async def login_user(
