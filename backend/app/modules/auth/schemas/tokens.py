@@ -1,8 +1,6 @@
 from pydantic import BaseModel
-from .user_response import UserResponse
 from .refresh_token_data import RefreshTokenData
 
-class AuthResponse(BaseModel):
-    user: UserResponse
+class Tokens(BaseModel):
     access_token: str
     refresh_token: RefreshTokenData

@@ -59,3 +59,9 @@ class User(Base):
         back_populates="used_by",
         foreign_keys="Invite.used_by_id"
     )
+
+    refresh_tokens = relationship(
+        'RefreshToken',
+        back_populates='user',
+        cascade='all, delete-orphan'
+    )

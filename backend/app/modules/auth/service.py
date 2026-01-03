@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from .schemas import AuthResponse, RegisterUserPayload, UserResponse, LoginUserPayload, InviteTokenData, AccessTokenData
-from .models import User, Invite
+from sqlalchemy import select, delete
+from .schemas import AuthResponse, RegisterUserPayload, UserResponse, LoginUserPayload, InviteTokenData, AccessTokenData, Tokens
+from .models import User, Invite, RefreshToken
 from app.core.logging import logger
 from app.core.lib import handle_exception, ApiErrors
-from .utils import hash_password, verify_password, generate_access_token, generate_invite_token, decode_invite_token
+from .utils import hash_password, verify_password, generate_access_token, generate_invite_token, generate_refresh_token, hash_refresh_token, decode_access_token
 from datetime import datetime, timedelta, timezone
 from app.core import settings
 
@@ -45,14 +45,22 @@ class AuthService:
             invite.used_by_id = user.id
             self.session.add(invite)
 
-            await self.session.commit()
-
             access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
+            refresh_token_data = generate_refresh_token()
+
+            refresh_token = RefreshToken(
+                user_id = user.id,
+                token_hash = hash_refresh_token(refresh_token_data.token),
+                expires_at = refresh_token_data.expires_at
+            )
+            self.session.add(refresh_token)
+
+            await self.session.commit()
 
             return AuthResponse(
                 user=UserResponse.model_validate(user),
                 access_token=access_token,
-                token_type='bearer'
+                refresh_token=refresh_token_data,
             )
 
         except Exception as e:
@@ -77,11 +85,21 @@ class AuthService:
                 raise ApiErrors.Unauthorized(f'Invalid credentials. Incorrect password')
             
             access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
+            refresh_token_data = generate_refresh_token()
+
+            refresh_token = RefreshToken(
+                user_id = user.id,
+                token_hash = hash_refresh_token(refresh_token_data.token),
+                expires_at = refresh_token_data.expires_at
+            )
+            self.session.add(refresh_token)
+
+            await self.session.commit()
 
             return AuthResponse(
                 user=UserResponse.model_validate(user),
                 access_token=access_token,
-                token_type='bearer'
+                refresh_token=refresh_token_data,
             )
 
         except Exception as e:
@@ -90,6 +108,23 @@ class AuthService:
                 context={
                     'error_code': 'USER_LOGIN_ERROR',
                     'user_email': data.email
+                }
+            )
+
+    async def logout_user(self, refresh_token: str) -> None:
+        try:
+            await self.session.execute(
+                delete(RefreshToken).where(RefreshToken.token_hash == hash_refresh_token(refresh_token))
+            )
+            await self.session.commit()
+
+            return
+
+        except Exception as e:
+            handle_exception(
+                e,
+                context={
+                    'error_code': 'USER_LOGOUT_ERROR',
                 }
             )
     
@@ -114,5 +149,45 @@ class AuthService:
                 e,
                 context={
                     "error_code": "REGISTRAION_LINK_GENERATE_ERROR"
+                }
+            )
+
+    async def refresh_tokens(self, refresh_token: str) -> Tokens:
+        try:
+            old_refresh_token = await self.session.scalar(
+                select(RefreshToken).where(RefreshToken.token_hash == hash_refresh_token(refresh_token))
+            )
+            
+            if not old_refresh_token:
+                raise ApiErrors.Unauthorized(f'Invalid refresh token')
+            if old_refresh_token.expires_at < datetime.now(timezone.utc):
+                raise ApiErrors.Unauthorized(f'Refresh token expired')
+            await self.session.execute(delete(RefreshToken).where(RefreshToken.id == old_refresh_token.id))
+
+            user = await self.session.scalar(
+                select(User).where(User.id == old_refresh_token.user_id)
+            )
+
+            new_access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
+            new_refresh_token = generate_refresh_token()
+            await self.session.add(
+                RefreshToken(
+                    user_id = user.id,
+                    token_hash = hash_refresh_token(new_refresh_token),
+                    expires_at = new_refresh_token.expires_at
+                )
+            )
+
+            await self.session.commit()
+
+            return Tokens(access_token=new_access_token, refresh_token=new_refresh_token)
+
+        
+        except Exception as e:
+            handle_exception(
+                e,
+                context={
+                    "error_code": "REFRESH_TOKENS_ERROR",
+
                 }
             )
