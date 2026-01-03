@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
-from .schemas import AuthResponse, RegisterUserPayload, UserResponse, LoginUserPayload, InviteTokenData, AccessTokenData, Tokens
+from .schemas import AuthResponse, RegisterUserPayload, UserResponse, LoginUserPayload, InviteTokenData, AccessTokenData, AccessTokenPayload, Tokens
 from .models import User, Invite, RefreshToken
 from app.core.logging import logger
 from app.core.lib import handle_exception, ApiErrors
@@ -45,7 +45,9 @@ class AuthService:
             invite.used_by_id = user.id
             self.session.add(invite)
 
-            access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
+            access_token_payload = AccessTokenPayload(id=user.id, role=user.tech_role)
+            access_token = generate_access_token(access_token_payload)
+
             refresh_token_data = generate_refresh_token()
 
             refresh_token = RefreshToken(
@@ -59,7 +61,7 @@ class AuthService:
 
             return AuthResponse(
                 user=UserResponse.model_validate(user),
-                access_token=access_token,
+                access_token=AccessTokenData(token=access_token, user_data=access_token_payload),
                 refresh_token=refresh_token_data,
             )
 
@@ -84,7 +86,9 @@ class AuthService:
             if not verify_password(data.password, user.password_hash):
                 raise ApiErrors.Unauthorized(f'Invalid credentials. Incorrect password')
             
-            access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
+            access_token_payload = AccessTokenPayload(id=user.id, role=user.tech_role)
+            access_token = generate_access_token(access_token_payload)
+
             refresh_token_data = generate_refresh_token()
 
             refresh_token = RefreshToken(
@@ -98,7 +102,7 @@ class AuthService:
 
             return AuthResponse(
                 user=UserResponse.model_validate(user),
-                access_token=access_token,
+                access_token=AccessTokenData(token=access_token, user_data=access_token_payload),
                 refresh_token=refresh_token_data,
             )
 
@@ -159,7 +163,7 @@ class AuthService:
             )
             
             if not old_refresh_token:
-                raise ApiErrors.Unauthorized(f'Invalid refresh token')
+                raise ApiErrors.Unauthorized(f'Refresh token not found')
             if old_refresh_token.expires_at < datetime.now(timezone.utc):
                 raise ApiErrors.Unauthorized(f'Refresh token expired')
             await self.session.execute(delete(RefreshToken).where(RefreshToken.id == old_refresh_token.id))
@@ -171,7 +175,9 @@ class AuthService:
             if not user:
                 raise ApiErrors.NotFound(f'User with id {old_refresh_token.user_id} not found')
 
-            new_access_token = generate_access_token(AccessTokenData(id=user.id, role=user.tech_role))
+            access_token_payload = AccessTokenPayload(id=user.id, role=user.tech_role)
+            new_access_token = generate_access_token(access_token_payload)
+
             new_refresh_token = generate_refresh_token()
 
             self.session.add(
@@ -184,7 +190,10 @@ class AuthService:
 
             await self.session.commit()
 
-            return Tokens(access_token=new_access_token, refresh_token=new_refresh_token)
+            return Tokens(
+                access_token=AccessTokenData(token=new_access_token, user_data=access_token_payload), 
+                refresh_token=new_refresh_token
+            )
 
         
         except Exception as e:

@@ -2,18 +2,18 @@ from datetime import datetime, timezone, timedelta
 from jose import jwt
 import secrets
 from app.core import settings
-from ..schemas import AccessTokenData, InviteTokenData, RefreshTokenData
+from ..schemas import AccessTokenPayload, InviteTokenData, RefreshTokenData
 
-def generate_access_token(data: AccessTokenData) -> str:
+def generate_access_token(data: AccessTokenPayload) -> str:
     to_encode = data.model_dump()
     expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({'exp': expire})
     encoded_access_token = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_access_token
 
-def decode_access_token(token: str) -> AccessTokenData:
+def decode_access_token(token: str) -> AccessTokenPayload:
     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-    return AccessTokenData(**payload)
+    return AccessTokenPayload(**payload)
 
 def generate_refresh_token() -> RefreshTokenData:
     token = secrets.token_urlsafe(48)

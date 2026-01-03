@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from ..models import UserRole
+from .access_token_payload import AccessTokenPayload
 
 class AccessTokenData(BaseModel):
-    id: int
-    role: UserRole
+    token: str
+    user_data: AccessTokenPayload

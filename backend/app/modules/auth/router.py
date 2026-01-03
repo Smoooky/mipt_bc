@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, Response, Request, Cookie, Header
 from sqlalchemy.ext.asyncio import AsyncSession
-from .schemas import AuthResponse, LoginUserPayload, InviteTokenData, UserResponse
+from .schemas import AuthResponse, LoginUserPayload, InviteTokenData, RegisterUserPayload, UserResponse
 from app.core.database import get_session
 from app.core.lib import CustomHTTPException
 from .service import AuthService
@@ -14,26 +14,27 @@ async def ping():
 
 @router.post(
     '/registration/{token}',
-    response_model=AuthResponse,
+    response_model=UserResponse,
     status_code=status.HTTP_201_CREATED
 )
 async def register_user(
     token: str,
-    payload: UserResponse,
+    payload: RegisterUserPayload,
     response: Response,
     session: AsyncSession = Depends(get_session),
 ):
     service = AuthService(session)
+
     auth_data = await service.register_user(payload, token)
-    max_age = int((auth_data.refresh_token.expires_at - datetime.now(timezone.utc)).total_seconds())
-    response.headers['Authorization'] = f'Bearer {auth_data.access_token}'
+
+    response.headers['Authorization'] = f'Bearer {auth_data.access_token.token}'
     response.set_cookie(
         key='refresh_token',
         value=auth_data.refresh_token.token,
         httponly=True,
         secure=False, # Пока что
         samesite='strict',
-        expires=max_age
+        expires=auth_data.refresh_token.expires_at
     )
     return auth_data.user
 
@@ -47,16 +48,17 @@ async def login_user(
     session: AsyncSession = Depends(get_session)
 ):
     service = AuthService(session)
+
     auth_data = await service.login_user(payload)
-    max_age = int((auth_data.refresh_token.expires_at - datetime.now(timezone.utc)).total_seconds())
-    response.headers['Authorization'] = f'Bearer {auth_data.access_token}'
+
+    response.headers['Authorization'] = f'Bearer {auth_data.access_token.token}'
     response.set_cookie(
         key='refresh_token',
         value=auth_data.refresh_token.token,
         httponly=True,
         secure=False, # Пока что
         samesite='strict',
-        expires=max_age
+        expires=auth_data.refresh_token.expires_at
     )
     return 
 
@@ -103,7 +105,7 @@ async def refresh_tokens(
     service = AuthService(session)
     refresh_data = await service.refresh_tokens(refresh_token)
 
-    response.headers['Authorization'] = f'Bearer {refresh_data.access_token}'
+    response.headers['Authorization'] = f'Bearer {refresh_data.access_token.token}'
     response.set_cookie(
         key='refresh_token',
         value=refresh_data.refresh_token.token,
