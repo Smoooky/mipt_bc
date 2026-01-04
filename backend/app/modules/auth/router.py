@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, status, Response, Request, Cookie, Header
 from sqlalchemy.ext.asyncio import AsyncSession
-from .schemas import AuthResponse, LoginUserPayload, InviteTokenData, RegisterUserPayload, UserResponse
+from .schemas import AuthResponse, LoginUserPayload, InviteTokenData, RegisterUserPayload, UserResponse, UpdateRolePayload
+from .models import UserRole
 from app.core.database import get_session
 from app.core.lib import CustomHTTPException
+from app.core.dependencies import role_required_factory
 from .service import AuthService
 from datetime import datetime, timezone
 
@@ -40,7 +42,7 @@ async def register_user(
 
 @router.post(
     '/login',
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_204_NO_CONTENT
 )
 async def login_user(
     payload: LoginUserPayload,
@@ -64,7 +66,7 @@ async def login_user(
 
 @router.post(
     '/logout',
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_204_NO_CONTENT
 )
 async def logout_user(
     response: Response,
@@ -113,5 +115,21 @@ async def refresh_tokens(
         secure=False, # Пока что
         samesite='strict',
         expires=refresh_data.refresh_token.expires_at
+    )
+    return
+
+@router.patch(
+    '/admin/role',
+    status_code=status.HTTP_204_NO_CONTENT
+)
+async def update_role(
+    payload: UpdateRolePayload,
+    session: AsyncSession = Depends(get_session),
+    user_data = Depends(role_required_factory(UserRole.ADMIN))
+):
+    service = AuthService(session)
+    await service.update_role(
+        user_id=payload.user_id,
+        role=payload.role
     )
     return

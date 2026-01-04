@@ -1,6 +1,8 @@
 from fastapi import Header, Cookie, Response, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.auth import decode_access_token, AuthService, AccessTokenPayload
+from app.modules.auth.utils import decode_access_token
+from app.modules.auth.service import AuthService
+from app.modules.auth.schemas import AccessTokenPayload
 from app.core.database import get_session
 from app.core.lib import CustomHTTPException
 from app.core.logging import logger

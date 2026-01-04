@@ -1,6 +1,6 @@
 from fastapi import Depends
 from app.core.lib import ApiErrors, handle_exception
-from app.modules.auth import AccessTokenPayload
+from app.modules.auth.schemas import AccessTokenPayload
 from .check_if_authorized import check_if_authorized
 
 def role_required_factory(*roles):

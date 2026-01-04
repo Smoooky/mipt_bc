@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from .schemas import AuthResponse, RegisterUserPayload, UserResponse, LoginUserPayload, InviteTokenData, AccessTokenData, AccessTokenPayload, Tokens
-from .models import User, Invite, RefreshToken
+from .models import User, Invite, RefreshToken, UserRole
 from app.core.logging import logger
 from app.core.lib import handle_exception, ApiErrors
 from .utils import hash_password, verify_password, generate_access_token, generate_invite_token, generate_refresh_token, hash_refresh_token, decode_access_token
@@ -201,5 +201,32 @@ class AuthService:
                 e,
                 context={
                     "error_code": "REFRESH_TOKENS_ERROR",
+                }
+            )
+
+    async def update_role(self, user_id: int, role: UserRole) -> None:
+        try:
+            stmt = (
+                update(User)
+                .where(User.id == user_id)
+                .values(tech_role=role)
+                .returning(User.id)
+            )
+            
+            result = await self.session.execute(stmt)
+            updated_user_id = result.scalar_one_or_none()
+
+            if updated_user_id is None:
+                raise ApiErrors.NotFound(f'User with id {user_id} not found')
+            
+            await self.session.commit()
+
+        except Exception as e:
+            handle_exception(
+                e,
+                context={
+                    "error_code": "REFRESH_TOKENS_ERROR",
+                    "user_id": user_id,
+                    "role": role
                 }
             )
