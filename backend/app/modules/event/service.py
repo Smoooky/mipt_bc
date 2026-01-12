@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from .schemas import EventCreate, SpeakerCreate
-from .models import Event, EventSpeakers, Speaker
+from .models import Event, EventSpeaker, Speaker
 from app.core.logging.logger import logger
 from app.core.lib import handle_exception
 from app.core.lib.ApiError import ApiErrors
@@ -30,7 +30,7 @@ class EventService:
                                 f"Speaker with id {speaker_id} not found"
                             )
 
-                        link = EventSpeakers(
+                        link = EventSpeaker(
                             eventId=event.id,
                             speakerId=speaker.id
                         )
@@ -48,7 +48,7 @@ class EventService:
             handle_exception(
                 e,
                 context={
-                    "cause": "Event create error",
+                    "error_code": "EVENT_CREATE_ERROR",
                     "event_title": event_in.title,
                 },
             )
@@ -67,7 +67,7 @@ class EventService:
             handle_exception(
                 e,
                 context={
-                    "cause": "Get event error",
+                    "error_code": "EVENT_GET_ERROR",
                     "event_id": event_id
                 }
             )
@@ -90,12 +90,12 @@ class EventService:
             handle_exception(
                 e,
                 context={
-                    "cause": "Speaker create error",
+                    "erorr_code": "SPEAKER_CREATE_ERROR",
                     "speaker_name": speaker_in.title,
                 },
             )
 
-    async def get_speacker(self, speaker_id: int) -> Speaker:
+    async def get_speaker(self, speaker_id: int) -> Speaker:
         try:
             stmt = select(Speaker).where(Speaker.id == speaker_id)
             result = await self.session.execute(stmt)
@@ -109,7 +109,7 @@ class EventService:
             handle_exception(
                 e,
                 context={
-                    "cause": "Get speacker error",
+                    "error_code": "SPEAKER_GET_ERROR",
                     "speaker_id": speaker_id
                 }
             )

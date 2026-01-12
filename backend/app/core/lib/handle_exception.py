@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from app.core.lib.CustomHTTPException import CustomHTTPException
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from ..logging.logger import logger
 from .ApiError import ApiError
@@ -17,17 +18,20 @@ def handle_exception(e: Exception, context: dict = None):
             "status_code": e.status_code,
         })
 
-        logger.warning("Application error", extra_data=extra_data)
+        logger.warn("Application error", extra_data=extra_data)
 
-        raise HTTPException(
+        raise CustomHTTPException(
             status_code=e.status_code,
-            detail=e.message
+            detail=e.message,
+            error_code=context['error_code'],
+            additional_info=context.get("additional_info")
         )
 
     if isinstance(e, SQLAlchemyError):
         extra_data.update({
             "error_type": type(e).__name__,
             "message": str(e.__cause__ or e), 
+            "detail": str(e._message or 'none')
         })
         logger.error("Database error occurred", extra_data=extra_data)
 
@@ -37,11 +41,6 @@ def handle_exception(e: Exception, context: dict = None):
         else: 
             detail = "Database internal error"
             status_code = 500
-    
-    elif isinstance(e, HTTPException):
-        extra_data.update({"status_code": e.status_code, "detail": e.detail})
-        logger.error("HTTP exception occurred", extra_data=extra_data)
-        raise e
 
     else:
         # Любая непредвиденная ошибка
@@ -50,4 +49,4 @@ def handle_exception(e: Exception, context: dict = None):
         detail = "Internal server error"
         status_code = 500
     
-    raise HTTPException(status_code=status_code, detail=detail)
+    raise CustomHTTPException(status_code=status_code, detail=detail)
