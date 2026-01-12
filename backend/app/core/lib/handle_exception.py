@@ -1,8 +1,8 @@
 from fastapi import HTTPException
-from app.core.lib.CustomHTTPException import CustomHTTPException
+from app.core.lib.custom_http_exception import CustomHTTPException
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from ..logging.logger import logger
-from .ApiError import ApiError
+from .api_error import ApiError
 
 def handle_exception(e: Exception, context: dict = None):
     """
@@ -44,9 +44,19 @@ def handle_exception(e: Exception, context: dict = None):
 
     else:
         # Любая непредвиденная ошибка
-        extra_data.update({"error_type": type(e).__name__})
+        extra_data.update({
+            "error_type": type(e).__name__,
+            "message": str(e)
+            })
         logger.error("Unexpected error", extra_data=extra_data)
         detail = "Internal server error"
         status_code = 500
+        error_code = context.get("error_code") if context else None
+        additional_info = context.get("additional_info") if context else None
     
-    raise CustomHTTPException(status_code=status_code, detail=detail)
+    raise CustomHTTPException(
+        status_code=status_code,
+        detail=detail,
+        error_code=error_code,
+        additional_info=additional_info
+    )

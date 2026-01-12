@@ -2,8 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 
 class SpeakerCreate(BaseModel):
-    fullName: str
+    full_name: str
     bio: Optional[str] = None
     position: str
     company: str
-    photoURL: Optional[str] = None
+    photo_url: Optional[str] = None

@@ -11,16 +11,16 @@ class EventResponse(BaseModel):
     id: int
     title: str
     description: str
-    startDate: datetime
-    endDate: Optional[datetime] = None
+    start_date: datetime
+    end_date: Optional[datetime] = None
     status: EventStatus
-    irlMeetingSpace: Optional[str] = None
-    onlineMeetingSpace: Optional[str] = None
-    streamLink: Optional[str] = None
-    coverUrl: Optional[str] = None
-    registrationLink: str
+    irl_meeting_space: Optional[str] = None
+    online_meeting_space: Optional[str] = None
+    stream_link: Optional[str] = None
+    cover_url: Optional[str] = None
+    registration_link: str
 
-    speakers: List[SpeakerResponse] = []
+    speakers: Optional[List[SpeakerResponse]] = None
 
     model_config = {
         "from_attributes": True
