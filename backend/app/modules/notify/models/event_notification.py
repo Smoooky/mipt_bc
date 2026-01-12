@@ -2,7 +2,7 @@
 Docstring for backend.app.modules.notify.models.Notification
 Здесь описывается модель УВЕДОМЛЕНИЯ. Примечание: Данные уведомления видит пользователь
 """
-from core.database.base_model import Base
+from app.core.database.base_model import Base
 from sqlalchemy import Column, Integer, JSON, DateTime, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
@@ -35,10 +35,10 @@ class EventNotification(Base):
     __tablename__ = 'EventNotifications'
 
     id = Column(Integer, primary_key=True)
-    userId = Column(Integer, ForeignKey('Users.id', ondelete='CASCADE'))
+    user_id = Column(Integer, ForeignKey('Users.id', ondelete='CASCADE'))
     type = Column(Enum(NotificationType), nullable=False)
     payload = Column(JSON, nullable=False)
-    readAt = Column(DateTime(timezone=True), nullable=True)
-    createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    read_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     user = relationship('User', back_populates='notifications')

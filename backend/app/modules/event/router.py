@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, status, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings, EventUpdate, SpeakerUpdate
+from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings, EventUpdate, SpeakerUpdate, AuthRoles
 from .service import EventService
 from app.core.database import get_session
+from app.core.dependencies import role_required_factory
 from typing import List
+from functools import partial
 
 router = APIRouter()
 
@@ -21,6 +23,7 @@ async def ping():
 async def create_event(
     payload: EventCreate,
     session: AsyncSession = Depends(get_session),
+    user_data = Depends(role_required_factory(AuthRoles.ADMIN, AuthRoles.MANAGER))
 ):
     service = EventService(session)
     return await service.create_event(payload)
@@ -33,7 +36,8 @@ async def create_event(
 async def update_event(
     id: int,
     payload: EventUpdate,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
+    user_data = Depends(role_required_factory(AuthRoles.ADMIN, AuthRoles.MANAGER))
 ):
     service = EventService(session)
     return await service.update_event(id, payload)
@@ -71,7 +75,8 @@ async def search_event(
 )
 async def delete_event(
     id: int,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
+    user_data = Depends(role_required_factory(AuthRoles.ADMIN, AuthRoles.MANAGER))
 ):
     service = EventService(session)
     await service.delete_event(id)
@@ -82,11 +87,12 @@ async def delete_event(
 @router.post(
     "/speaker",
     response_model=SpeakerResponse,
-    status_code=status.HTTP_201_CREATED
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_speaker(
     payload: SpeakerCreate,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
+    user_data = Depends(role_required_factory(AuthRoles.ADMIN, AuthRoles.MANAGER))
 ):
     service = EventService(session)
     return await service.create_speaker(payload)
@@ -99,7 +105,8 @@ async def create_speaker(
 async def update_speaker(
     id: int,
     payload: SpeakerUpdate,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
+    user_data = Depends(role_required_factory(AuthRoles.ADMIN, AuthRoles.MANAGER))
 ):
     service = EventService(session)
     return await service.update_speaker(id, payload)
@@ -133,11 +140,12 @@ async def get_speaker(
 
 @router.delete(
     '/speaker/{id}',
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_speaker(
     id: int,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
+    user_data = Depends(role_required_factory(AuthRoles.ADMIN, AuthRoles.MANAGER))
 ):
     service = EventService(session)
     await service.delete_speaker(id)

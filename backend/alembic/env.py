@@ -9,7 +9,9 @@ from alembic import context
 from app.core.config import settings
 from app.core.database.base_model import Base
 
+from app.modules.auth.models import User, Invite
 from app.modules.event.models import Event, Speaker, EventSpeaker
+from app.modules.notify.models import DeliveryJob, EventNotification
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -10,3 +10,5 @@ from .speaker_search_params import SpeakerSearchParams
 from .speaker_update import SpeakerUpdate
 
 from .pagination_settings import PaginationSettings
+
+from .auth_roles import AuthRoles
