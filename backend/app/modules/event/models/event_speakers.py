@@ -11,8 +11,8 @@ from datetime import datetime, timezone
 class EventSpeakers(Base):
     __tablename__ = 'EventSpeakers'
 
-    eventId = Column(Integer, ForeignKey('events.id'), primary_key=True)
-    speakerId = Column(Integer, ForeignKey('speakers.id'), primary_key=True)
+    eventId = Column(Integer, ForeignKey('Events.id'), primary_key=True)
+    speakerId = Column(Integer, ForeignKey('Speakers.id'), primary_key=True)
     createdAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updatedAt = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
