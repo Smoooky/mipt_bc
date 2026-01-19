@@ -13,6 +13,12 @@ services:
     environment:
       - APP_HOST=${APP_HOST}
       - APP_PORT=${APP_PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS}
+      - REGISTRATION_PAGE_URL=${REGISTRATION_PAGE_URL}
     volumes:
       - ./backend:/app
     depends_on:
@@ -29,8 +35,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     container_name: mipt_bc_frontend
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
     ports:
-      - "9973:9973"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -39,16 +47,19 @@ services:
   postgres:
     image: postgres:latest
     container_name: mipt_bc_postgres
+    env_file:
+      - ./.env
     environment:
-      POSTGRES_DB: mipt_db
-      POSTGRES_USER: mipt_admin
-      POSTGRES_PASSWORD: pop_muzik_lover
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     ports:
-      - "7654:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mipt_admin -d mipt_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
