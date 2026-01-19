@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings, EventUpdate, SpeakerUpdate, AuthRoles
 from .service import EventService
-from app.core.database import get_session
+from app.core.database.session import get_session
 from app.core.dependencies import role_required_factory
 from typing import List
 from functools import partial

@@ -1,11 +1,11 @@
-version: '3.8' 
+version: "3.8"
 
 services:
-  server:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: mipt_bc_server
+    container_name: mipt_bc_backend
     ports:
       - "${APP_PORT}:${APP_PORT}"
     env_file:
@@ -14,10 +14,16 @@ services:
       - APP_HOST=${APP_HOST}
       - APP_PORT=${APP_PORT}
     volumes:
-       - ./backend:/app
+      - ./backend:/app
     depends_on:
-       - migrations  # Сервер будет ждать завершения migrations
-  
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "
+      alembic upgrade head &&
+      uvicorn app.main:app --host ${APP_HOST} --port ${APP_PORT} --reload
+      "
+
   frontend:
     build:
       context: ./frontend
@@ -47,29 +53,5 @@ services:
       timeout: 5s
       retries: 5
 
-  migrations:
-    build: ./backend
-    container_name: mipt_bc_migrations  # ← ДОБАВЬТЕ имя контейнера
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: postgresql+asyncpg://mipt_admin:pop_muzik_lover@mipt_bc_postgres:5432/mipt_db
-      APP_PORT: 7812
-      APP_HOST: 0.0.0.0
-    volumes:
-      - ./backend:/app  # ← ДОБАВЬТЕ volume для миграций
-    env_file:
-    - ./.env 
-    command: |
-      sh -c "
-      sleep 10
-      echo 'Создаем миграцию...'
-      alembic revision --autogenerate -m 'init'
-      echo 'Применяем миграции...'
-      alembic upgrade head
-      "
-    restart: "no"
-
-volumes: 
+volumes:
   postgres_data:

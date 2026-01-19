@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from app.core.config import settings
 from app.core.database.base_model import Base
 
 from app.modules.auth.models import User, Invite

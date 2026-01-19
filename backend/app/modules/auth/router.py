@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, Response, Request, Cookie, Heade
 from sqlalchemy.ext.asyncio import AsyncSession
 from .schemas import AuthResponse, LoginUserPayload, InviteTokenData, RegisterUserPayload, UserResponse, UpdateRolePayload
 from .models import UserRole
-from app.core.database import get_session
+from app.core.database.session import get_session
 from app.core.lib import CustomHTTPException
 from app.core.dependencies import role_required_factory
 from .service import AuthService
