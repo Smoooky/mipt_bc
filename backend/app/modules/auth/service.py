@@ -6,7 +6,7 @@ from app.core.logging import logger
 from app.core.lib import handle_exception, ApiErrors
 from .utils import hash_password, verify_password, generate_access_token, generate_invite_token, generate_refresh_token, hash_refresh_token, decode_access_token
 from datetime import datetime, timedelta, timezone
-from app.core import settings
+from app.core.config import settings
 
 class AuthService:
     def __init__(self, session: AsyncSession):

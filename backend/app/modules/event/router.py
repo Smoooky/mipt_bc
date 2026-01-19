@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from .schemas import EventCreate, EventResponse, SpeakerResponse, SpeakerCreate, EventSearchParams, SpeakerSearchParams, PaginationSettings, EventUpdate, SpeakerUpdate, AuthRoles
 from .service import EventService
-from app.core.database import get_session
+from app.core.database.session import get_session
 from app.core.dependencies import role_required_factory
 from typing import List
 from functools import partial
@@ -43,18 +43,6 @@ async def update_event(
     return await service.update_event(id, payload)
 
 @router.get(
-    "/{id}",
-    response_model=EventResponse,
-    status_code=status.HTTP_200_OK
-)
-async def get_event(
-    id: int,
-    session: AsyncSession = Depends(get_session),
-):
-    service = EventService(session)
-    return await service.get_event(id)
-
-@router.get(
     "/search",
     response_model=List[EventResponse],
     status_code=status.HTTP_200_OK
@@ -68,6 +56,18 @@ async def search_event(
     service = EventService(session)
     settings = PaginationSettings(limit=limit, offset=offset)
     return await service.search_events(params, settings)
+
+@router.get(
+    "/{id}",
+    response_model=EventResponse,
+    status_code=status.HTTP_200_OK
+)
+async def get_event(
+    id: int,
+    session: AsyncSession = Depends(get_session),
+):
+    service = EventService(session)
+    return await service.get_event(id)
 
 @router.delete(
     '/{id}',

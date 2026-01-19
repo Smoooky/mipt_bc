@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
 from jose import jwt
 import secrets
-from app.core import settings
+from app.core.config import settings
 from ..schemas import AccessTokenPayload, InviteTokenData, RefreshTokenData
 
 def generate_access_token(data: AccessTokenPayload) -> str:
